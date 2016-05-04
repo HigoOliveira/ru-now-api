@@ -3,6 +3,7 @@ import passport from 'passport';
 import config from '../../../config.js';
 const router = express.Router();
 import User from '../../models/User';
+const encode = require('urlencode');
 
 // Facebook authentication
 router.get('/facebook', passport.authenticate('facebook', { session: false, scope: ['email', 'public_profile'] }));
@@ -11,7 +12,7 @@ router.get('/facebook/callback',
   passport.authenticate('facebook', { session: false, failureRedirect: config.facebookFail }),
   (req, res) => {
     console.log('Facebook callback req.user', req.user);
-    res.redirect(config.facebookSuccess+"?access_token=" + req.user.access_token);
+    res.redirect(config.facebookSuccess+"?access_token=" + req.user.access_token + "&url_pic="+encode(req.user.avatar)+"&name="+req.user.facebook.name+"&profileUrl="+encode(req.user.profileUrl));
   }
 );
 
